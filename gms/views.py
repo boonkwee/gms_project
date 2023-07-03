@@ -111,8 +111,8 @@ class ReservationListView(ListView):
     # print('field_names')
     # pprint(field_names)
 
-    print('object_data')
-    pprint(object_data)
+    # print('object_data')
+    # pprint(object_data)
     return context
 
 
