@@ -1,0 +1,18 @@
+{% load static %}
+
+<script src="{% static 'js/jquery-3.7.0.slim.min.js' %}"></script>
+<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/lightbox.min.js' %}"></script>
+<script src="{% static 'js/jquery.resizableColumns.min.js' %}"></script>
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+  $(function(){
+  
+    $(document).ready(function () {
+      $('#table').DataTable();
+      $("table").resizableColumns({});
+      });
+  });
+</script>

@@ -1,0 +1,39 @@
+{% extends 'gms/base.html' %}
+
+{% block title %} | Dashboard {% endblock %}
+{% block content %}
+<div class="container">
+
+{% if data %}
+    <table class="table table-striped table-sm table-bordered table-hover table-wrapper">
+      <thead class="thead-dark sticky-top">
+        <tr>
+          {% for field_name in header %}
+          <th class="align-text-top">{{ field_name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row_dict in data %}
+        <tr>
+          {% for column_name, field_value in row_dict.items %}
+            {% if 'success' in field_value|lower %}
+              <td class="align-middle text-success">{{ field_value }}</td>
+            {% elif 'error' in field_value|lower or 'fail' in field_value|lower %}
+              <td class="align-middle text-danger font-weight-bold">{{ field_value }}</td>
+            {% elif 'warning' in field_value|lower %}
+              <td class="align-middle text-warning font-weight-bold">{{ field_value }}</td>
+            {% else %}
+              <td>{{ field_value }}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+{% else %}
+  <p>No data</p>
+{% endif %}
+</div>
+
+{% endblock %}

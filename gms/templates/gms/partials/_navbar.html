@@ -1,0 +1,67 @@
+{% load static %}    
+    
+    <!-- Navbar -->
+    <!-- <nav class="navbar d-lg-block navbar-expand-lg navbar-dark bg-primary sticky-top"> -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        {% if user.is_authenticated %}
+            <a class="navbar-brand navbar-dark bg-primary" href="{% url 'dashboard' %}">GMS</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse bg-primary" id="navbarNavAltMarkup">
+                <ul class="navbar-nav ml-auto">
+                    <li 
+                    {% if 'dashboard' in request.path %}
+                        class="nav-item active mr-3"
+                    {% else %}
+                        class="nav-item mr-3"
+                    {% endif %}
+                    >
+                    <a class="nav-link" href="{% url 'dashboard' %}">
+                        {{ user.username }}</a>
+                    </li>
+                    <li 
+                    {% if 'reservations' in request.path %}
+                        class="nav-item active mr-3"
+                    {% else %}
+                        class="nav-item mr-3"
+                    {% endif %}
+                    >
+                    <a class="nav-link" href="{% url 'reservations' %}">Reservations</a>
+                    </li>
+                    <li 
+                    {% if 'guests' in request.path %}
+                        class="nav-item active mr-3"
+                    {% else %}
+                        class="nav-item mr-3"
+                    {% endif %}
+                    >
+                    <a class="nav-link" href="{% url 'guests' %}">Guest list</a>
+                    </li>
+                    <li 
+                    {% if 'upload' in request.path %}
+                        class="nav-item active mr-3"
+                    {% else %}
+                        class="nav-item mr-3"
+                    {% endif %}
+                    >
+                    <a class="nav-link" href="{% url 'upload' %}">Upload</a>
+                    </li>
+                    <!-- <li class="nav-item mr-3">-->
+                    <li class="ms-auto me-1 d-grid">
+                            <a href="{% url 'logout' %}" class="nav-link">    
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% else %}
+            <a class="navbar-brand navbar-dark bg-primary" href="{% url 'gms_login' %}">GMS</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            </div>
+        {% endif %}
+    </nav>

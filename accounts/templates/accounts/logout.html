@@ -1,0 +1,14 @@
+{% extends 'gms/base.html' %}
+
+{% block title %} | Login {% endblock %}
+
+{% block content %}
+  <div class="container">
+    <p>You have been logged out</p>
+    <div class="border-top pt-3">
+      <small class="text-muted">
+        <a href="{% url 'gms_login' %}">Log In Again</a>
+      </small>
+    </div>  
+  </div>
+{% endblock %}

@@ -1,0 +1,360 @@
+{% extends 'gms/base.html' %}
+
+{% block title %} | Dashboard {% endblock %}
+
+{% block content %}
+<!-- <section id="showcase-inner" class="py-5 text-white"> -->
+  <div class="bg-success text-white">
+    <div class="row text-center">
+      <div class="col-md-12">
+        <h1 class="display-4">Dashboard</h1>
+      </div>
+    </div>
+  </div>
+<!-- </section> -->
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'dashboard' %}">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item active"> Dashboard</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Alerts -->
+  {% include 'gms/partials/_alerts.html' %}
+
+  <section id="dashboard" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Welcome {{ user.username }}</h2>
+
+          <div class="row"> <!-- row 1-->
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                          Caregiver / Dependent</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right align-text-bottom">
+                        0</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-user fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                          Inserted</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right align-text-bottom">
+                        {{ non_puq_inserted }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                        <i class="fas fa-user-plus fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                          Assigned</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right align-text-bottom">
+                        0</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                        <i class="fas fa-user-tag fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                          Check-in</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        0</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-check fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>            <!-- end row 1-->
+          <div class="row"> <!-- row 2-->
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                        Active PUQ</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        {{ all_puq }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                        <i class="fas fa-user-friends fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        PUQ Ingested</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        {{ puq_ingested }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-user-friends fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Assigned</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        {{ puq_assigned }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-user-friends fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                        Checked-in</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        {{ puq_checked_in }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-user-plus fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        In-transition</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        0</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-user-tag fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>            <!-- end row 2-->
+          <div class="row"> <!-- row 3-->
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                        Total Beds</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        {{ 0 }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                        <i class="fas fa-user-friends fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        Available</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        {{ 0 }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-user-friends fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Reserved</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        {{ 0 }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-user-friends fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                        Occupied</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        {{ 0 }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-user-plus fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        (Absent)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        {{ 0 }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-user-tag fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-muted text-uppercase mb-1">
+                          Unavailable</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right">
+                        {{ 0 }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-check fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>  <!-- end row 3  -->
+          <div class="row"> <!-- row 4 -->
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                          Drop</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right align-text-bottom">
+                        {{ drop_cases }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-user fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                          MOH</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800 text-right align-text-bottom">
+                        {{ moh_cases }}</div>
+                    </div>
+                    <!-- <div class="col-auto">
+                        <i class="fas fa-user-plus fa-2x text-gray-300"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>            <!-- end row 4-->
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endblock %}
