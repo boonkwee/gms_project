@@ -5,14 +5,15 @@ from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import datetime
+from pprint import pprint
 
 class YesNoWidget(widgets.Select):
-    def __init__(self, attrs=None):
-        YesNo = [
-            (True, 'Yes'),
-            (False, 'No'),
-        ]
-        super().__init__(attrs, YesNo)
+  def __init__(self, attrs=None):
+    YesNo = [
+      (True, 'Yes'),
+      (False, 'No'),
+    ]
+    super().__init__(attrs, YesNo)
 
 class YesNoField(models.BooleanField):
   def __init__(self, *args, **kwargs):
@@ -102,45 +103,71 @@ class hotel_guest(models.Model):
                                        db_column='guest_created')
 
   def __lt__(self, other):
-      # Compare based on the guest_id field
-      return self.guest_id < other.guest_id
+    # Compare based on the guest_id field
+    return self.guest_id < other.guest_id
 
   def __gt__(self, other):
-      # Compare based on the guest_id field
-      return self.guest_id > other.guest_id
+    # Compare based on the guest_id field
+    return self.guest_id > other.guest_id
 
   def get_guest_comm_dweller_display(self):
-      return 'Yes' if self.guest_comm_dweller else 'No'
+    return 'Yes' if self.guest_comm_dweller else 'No'
 
   def clean(self):
-      if self.guest_date_of_birth and self.guest_date_of_birth >= timezone.now().date():
-          raise ValidationError("Guest date of birth cannot be today or later.")
+    if self.guest_date_of_birth and self.guest_date_of_birth >= timezone.now().date():
+      raise ValidationError("Guest date of birth cannot be today or later.")
 
   class Meta:
-      db_table = "tbl_cbk_hotel_guests"
+    db_table = "tbl_cbk_hotel_guests"
 
   def save(self, *args, **kwargs):
-      # Create a guest_transaction record
-      # print(f'Saving {self.guest_id}')
-      self.guest_id = self.guest_id.upper()
-      self.guest_name = self.guest_name.upper()
-      self.clean()
-      created = self._state.adding  # Check if the instance is being created or updated
-      if self.guest_created is None:
-         self.guest_created = timezone.now()
-      super().save(*args, **kwargs)  # Save the instance
+    # print(__name__)
+    # pprint(kwargs)
+    gqf = apps.get_model('gqf', 'GQF')
+    guest_transaction = apps.get_model('gms', 'guest_transaction')
+    all_reservation_fields = [field.name for field in guest_transaction._meta.get_fields()]
+    all_guest_fields = [field.name for field in self._meta.get_fields()]
+    param = {}
+    # Create a guest_transaction record
+    # print(f'Saving {self.guest_id}')
+    self.guest_id = self.guest_id.upper()
+    self.guest_name = self.guest_name.upper()
+    self.clean()
+    created = self._state.adding  # Check if the instance is being created or updated
+    if self.guest_created is None:
+      self.guest_created = timezone.now()
+    for field_name, field_value in kwargs.items():
+      if field_name not in all_guest_fields:
+        param[field_name] = field_value
 
-      # If the instance is being created, create a related guest_transaction record
-      if created:
-          # print(f'Creating Guest {self.guest_id}')
-          guest_transaction = apps.get_model('gms', 'guest_transaction')
-          # guest_transaction.objects.create(trans_guest_id=self)
-          # guest_transaction.save()
-          guest_transaction.objects.update_or_create(trans_guest_id=self)
+    gqf_field = 'trans_checkin_hotel'
+    if gqf_field in param:
+      if not isinstance(param[gqf_field], gqf):
+        try:
+          gqf_object = gqf.objects.get(code=param[gqf_field])
+          param[gqf_field] = gqf_object
+        except gqf.DoesNotExist:
+          raise
+
+    for field_name in param:
+      del kwargs[field_name]
+    if 'trans_guest_id' in param:
+      del param['trans_guest_id']
+    # print('Parameter to pass create Reservation')
+    # pprint(param)
+    # print('kwargs to save Guest record')
+    # pprint(kwargs)
+    super().save(*args, **kwargs)  # Save the instance
+
+    # If the instance is being created, create a related guest_transaction record
+    if created:
+      guest_transaction.objects.update_or_create(
+        trans_guest_id=self,
+        **param)
 
   def id_only(self):
-      return f'{self.guest_id.upper()}'
+    return f'{self.guest_id.upper()}'
 
   def __str__(self):
-      # return f'{self.guest_id.upper()}, {self.guest_name.upper()}'
-      return f'{self.guest_id.upper()}'
+    # return f'{self.guest_id.upper()}, {self.guest_name.upper()}'
+    return f'{self.guest_id.upper()}'

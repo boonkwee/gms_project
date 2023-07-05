@@ -6,6 +6,7 @@ from pprint import pprint
 from django.test import SimpleTestCase, TestCase
 from guests.models import person_type
 from gqf.models import GQF
+from gms.models import guest_transaction
 from sheets.record import GuestRecord, ReservationRecord
 from libs.misc import running_test, convert_excel_number_to_date
 from custom_functions.apps import queryset_label_to_reverse_dict
@@ -93,6 +94,9 @@ class SheetTest(TestCase):
     g = GuestRecord(data_dict=self.test_record)
     self.assertIsNotNone(g)
     guest = g.object
+    reservation = guest_transaction.objects.get(trans_guest_id=self.test_record['NRIC'])
+    self.assertIsNotNone(reservation)
+    self.assertEquals(reservation.trans_date_checkin_planned, self.test_record['QO Start Date'])
     guest_record_dict = g.record_fields
     for column_name, field_value in [c_name for c_name in self.test_record.items() if c_name in guest_record_dict]:
       field_name = guest_record_dict[column_name]
@@ -112,6 +116,7 @@ class SheetTest(TestCase):
 
   def test_reservation_record(self):
     r = ReservationRecord(data_dict=self.test_record)
+    print(r.object.trans_date_checkin_planned)
     self.assertIsNotNone(r)
     reservation = r.object
     reservation_record_dict = r.record_fields
@@ -157,6 +162,3 @@ class SheetTest(TestCase):
     self.isGuestRecDict()
     self.isReservationRecDict()    
 
-class TestGuest(TestCase):
-  def test_createGuest(self):
-    pass
