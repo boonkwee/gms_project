@@ -36,8 +36,8 @@ class BaseRecord:
         self.fields_in_file.append(self.record_fields[column_name])
         field_name = self.record_fields[column_name]
         if '_date_' in field_name:
-          self.object_record[field_name] = convert_excel_number_to_date(column_value)
-          print (f'{field_name} converted to {repr(self.object_record[field_name])}')
+          converted_date = convert_excel_number_to_date(column_value)
+          self.object_record[field_name] = converted_date
         elif field_name == 'guest_comm_dweller':
           self.object_record[field_name] = str(column_value).upper().startswith('Y')
         elif field_name == 'trans_checkin_hotel':
@@ -65,8 +65,8 @@ class GuestRecord(BaseRecord):
       value:field
       for field, value in ReservationRecord.record_fields.items()
     }
-    all_reservation_fields = {
-      field.name:data_dict[reverse_record_fields[field.name]]
+    reservation_details = {
+      field.name : data_dict[reverse_record_fields[field.name]]
       for field in guest_transaction._meta.get_fields() 
       if field.name in ReservationRecord.record_fields.values()
       }
@@ -93,7 +93,7 @@ class GuestRecord(BaseRecord):
             self.object_record[field_name] = str(column_value).upper().startswith('Y')
 
           setattr (self.object, field_name, self.object_record[field_name])
-      self.object.save(**all_reservation_fields)
+      self.object.save(**reservation_details)
 
 
 class ReservationRecord(BaseRecord):
