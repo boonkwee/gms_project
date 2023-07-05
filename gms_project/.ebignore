@@ -11,4 +11,5 @@ venv
 *.ipynb
 ../test.bat
 test/
-*/test/
+**/test
+test/*.xlsx
