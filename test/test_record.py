@@ -151,7 +151,7 @@ class SheetTest(TestCase):
     compulsory_fields = ReservationRecord.compulsory_fields
     for f in self.test_record:
       test_record = dict(self.test_record)
-      if f  in compulsory_fields:
+      if f in compulsory_fields:
         del test_record[f]
         self.assertRaises(ValueError, ReservationRecord, test_record)
       else:
@@ -162,7 +162,10 @@ class SheetTest(TestCase):
     self.isReservationRecDict()    
 
   def test_reservation_double_entry(self):
-    g = GuestRecord(data_dict=self.test_record)
-    g = GuestRecord(data_dict=self.test_record)
+    for i in range(len(self.file_data)):
+      data_dict = dict(zip(self.file_headers, self.file_data[i]))
+      g = GuestRecord(data_dict)
+    # g = GuestRecord(data_dict=self.test_record)
+    # g = GuestRecord(data_dict=self.test_record)
     self.assertEquals(hotel_guest.objects.filter(guest_id=self.test_record['NRIC']).count(), 1)
     self.assertEquals(guest_transaction.objects.filter(trans_guest_id=self.test_record['NRIC']).count(), 1)
