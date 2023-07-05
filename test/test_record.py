@@ -148,6 +148,7 @@ class SheetTest(TestCase):
       else:
         self.assertNotIn(f, compulsory_fields)
 
+
   def test_reservation_record_exception_missing_fields(self):
     compulsory_fields = ReservationRecord.compulsory_fields
     for f in self.test_record:
