@@ -9,4 +9,4 @@ venv
 /static
 .env
 *.ipynb
-/test/*.xlsx
+test/*.xlsx
