@@ -4,7 +4,7 @@ import random
 import datetime
 from pprint import pprint
 from django.test import SimpleTestCase, TestCase
-from guests.models import person_type
+from guests.models import person_type, hotel_guest
 from gqf.models import GQF
 from gms.models import guest_transaction
 from sheets.record import GuestRecord, ReservationRecord
@@ -13,7 +13,7 @@ from custom_functions.apps import queryset_label_to_reverse_dict
 
 
 class SheetTest(TestCase):
-  file = os.path.join(os.getcwd(), 'test', 'test_11rows.xlsx')
+  file = os.path.join(os.getcwd(), 'test', 'test_3rows.xlsx')
   test_record = {
       'NRIC'                        : 'S0000000E',
       'Name of PUQ'                 : 'Ali Mohd',
@@ -157,8 +157,12 @@ class SheetTest(TestCase):
       else:
         self.assertNotIn(f, compulsory_fields)
 
-
   def test_iterTest(self):
     self.isGuestRecDict()
     self.isReservationRecDict()    
 
+  def test_reservation_double_entry(self):
+    g = GuestRecord(data_dict=self.test_record)
+    g = GuestRecord(data_dict=self.test_record)
+    self.assertEquals(hotel_guest.objects.filter(guest_id=self.test_record['NRIC']).count(), 1)
+    self.assertEquals(guest_transaction.objects.filter(trans_guest_id=self.test_record['NRIC']).count(), 1)

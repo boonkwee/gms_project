@@ -65,11 +65,15 @@ class GuestRecord(BaseRecord):
       value:field
       for field, value in ReservationRecord.record_fields.items()
     }
-    reservation_details = {
-      field.name : data_dict[reverse_record_fields[field.name]]
-      for field in guest_transaction._meta.get_fields() 
-      if field.name in ReservationRecord.record_fields.values()
-      }
+
+    reservation_details = {}
+    for field in guest_transaction._meta.get_fields():
+      if field.name in ReservationRecord.record_fields.values():
+        field_value = data_dict[reverse_record_fields[field.name]]
+        reservation_details[field.name] = convert_excel_number_to_date(field_value) if '_date_' in field.name else field_value
+       
+    # print('Reservation details:')
+    # pprint(reservation_details)
     
     obj_instance = hotel_guest.objects.filter(guest_id=data_dict['NRIC'])
 

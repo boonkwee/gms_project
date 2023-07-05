@@ -146,8 +146,8 @@ def manual_ingest(request):
     # Prepare the guest record and reservation record as a dictionary
     try:
       data_dict = dict(zip(file_headers, row))
-      reservation_record = ReservationRecord(data_dict)
       guest_record = GuestRecord(data_dict)
+      reservation_record = ReservationRecord(data_dict)
       message = 'Success: Guest record created; ' if guest_record.created else 'Warning: Guest record found; '
       message += 'Reservation created' if reservation_record.created else 'Reservation found'
     except ValueError as e:
