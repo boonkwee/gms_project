@@ -11,7 +11,7 @@ class BaseRecord:
   compulsory_fields = []
   created = True
 
-  def __init__(self, data_dict=None):
+  def __init__(self, data_dict=None, verbose=False):
     if data_dict is None:
       raise ValueError('No data and column field provided')
     if not isinstance(data_dict, dict):
@@ -26,6 +26,11 @@ class BaseRecord:
     if missing_fields:
       # raise ValueError
       raise ValueError(f'Missing compulsory fields: {",".join(missing_fields)}')
+
+    if verbose:
+      pprint(data_dict)
+      for k, v in self.record_fields.items():
+        print(f'{k} : {data_dict[k]}')
 
     self.fields_in_file = []
     self.object_record = {}
@@ -59,8 +64,8 @@ class GuestRecord(BaseRecord):
                        'Date of Birth',
                        ]
 
-  def __init__(self, data_dict=None):
-    super().__init__(data_dict)
+  def __init__(self, data_dict=None, verbose=False):
+    super().__init__(data_dict, verbose=verbose)
     reverse_record_fields = {
       value:field
       for field, value in ReservationRecord.record_fields.items()
@@ -109,8 +114,8 @@ class ReservationRecord(BaseRecord):
     }
   compulsory_fields = ['NRIC', 'QO Start Date', 'Facility']
 
-  def __init__(self, data_dict=None):
-    super().__init__(data_dict)
+  def __init__(self, data_dict=None, verbose=False):
+    super().__init__(data_dict, verbose=verbose)
 
     # Reservation with Guest ID exists and check-in field is empty
     obj_instance = guest_transaction.objects.filter(

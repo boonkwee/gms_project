@@ -62,6 +62,7 @@ class SheetTest(TestCase):
       if any(line):                
         self.file_data.append(line)
     self.file_headers = tuple(self.file_data[0])
+    self.file_data = self.file_data[1:]
   
 
   def test_guest_type(self):
@@ -116,7 +117,7 @@ class SheetTest(TestCase):
 
   def test_reservation_record(self):
     r = ReservationRecord(data_dict=self.test_record)
-    print(r.object.trans_date_checkin_planned)
+    # print(r.object.trans_date_checkin_planned)
     self.assertIsNotNone(r)
     reservation = r.object
     reservation_record_dict = r.record_fields
@@ -165,7 +166,7 @@ class SheetTest(TestCase):
     for i in range(len(self.file_data)):
       data_dict = dict(zip(self.file_headers, self.file_data[i]))
       g = GuestRecord(data_dict)
-    # g = GuestRecord(data_dict=self.test_record)
-    # g = GuestRecord(data_dict=self.test_record)
-    self.assertEquals(hotel_guest.objects.filter(guest_id=self.test_record['NRIC']).count(), 1)
-    self.assertEquals(guest_transaction.objects.filter(trans_guest_id=self.test_record['NRIC']).count(), 1)
+    g = GuestRecord(data_dict=self.test_record)
+    g = GuestRecord(data_dict=self.test_record)
+    self.assertEquals(hotel_guest.objects.all().count(), len(self.file_data) + 1)
+    self.assertEquals(guest_transaction.objects.all().count(), len(self.file_data) + 1)
