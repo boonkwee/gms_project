@@ -7,6 +7,7 @@ from itertools import chain
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.template import loader
@@ -48,13 +49,20 @@ def reservations(request):
 
     return render(request, 'gms/reservations.html', {'field_names': titles, 'object_data': listings})
 
-@method_decorator(login_required, name='dispatch')
-class ReservationListView(ListView):
+# @method_decorator(login_required, name='dispatch')
+class ReservationListView(LoginRequiredMixin, ListView):
   model = guest_transaction
   template_name = 'gms/reservations.html'
   context_object_name = 'reservations'
 
+  def test_func(self):
+    return self.request.user.groups.filter(name__in=['DM', 'OpsCen', 'DMC']).exists()
+  
+  def can_see_all(self):
+    return self.request.user.groups.filter(name__in=['OpsCen', 'DMC']).exists()
+
   def get_queryset(self):
+    user = self.request.user
     queryset = guest_transaction.objects \
         .filter(trans_date_checkin__isnull=True) \
         .select_related('trans_guest_id') \
@@ -70,6 +78,77 @@ class ReservationListView(ListView):
             'trans_guest_id__guest_comm_dweller',
             'trans_guest_id__guest_type',
             'trans_date_checkin_planned',
+            'trans_checkin_hotel',
+            'trans_remarks',
+        )
+    if user.groups.filter(name='DM').exists():
+      associated_facilities = user.associated_facilities.values_list('code', flat=True)
+      queryset = queryset.filter(trans_checkin_hotel__in=associated_facilities)
+
+    return queryset
+
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    
+    # Get the object list
+    object_list = context['object_list']
+    
+    # Create a list to store the data for each object
+    object_data = []
+    
+    COLHEAD = queryset_label_to_verbose_dict()
+    # print('COLHEAD')
+    # pprint(COLHEAD)
+
+    field_names = {}
+    qs = self.get_queryset()
+    if qs:
+      for fld in qs[0].keys():
+        fld_name = fld.split('__')[-1] if '__' in fld else fld
+        field_names[fld_name] = COLHEAD.get(fld_name) if COLHEAD.get(fld_name) else ''
+      
+      for obj in qs:
+        obj_fields = {}
+        for field_name, fld_value in obj.items():
+          obj_fields[field_name] = fld_value if fld_value else ''
+        object_data.append(obj_fields)
+
+      context['object_data'] = object_data
+      context['field_names'] = field_names
+    else:
+      context['object_data'] = None
+      context['field_names'] = None
+
+    # print('field_names')
+    # pprint(field_names)
+
+    # print('object_data')
+    # pprint(object_data)
+    return context
+
+
+class DeparturesListView(LoginRequiredMixin, ListView):
+  model = guest_transaction
+  template_name = 'gms/departures.html'
+  context_object_name = 'departures'
+
+  def get_queryset(self):
+    queryset = guest_transaction.objects \
+        .filter(Q(trans_date_checkout__isnull=True) & Q(trans_date_checkin__isnull=False)) \
+        .select_related('trans_guest_id') \
+        .order_by('trans_date_checkout') \
+        .values(
+            'trans_date_checkout',
+            'trans_room_id__room_name',
+            'transaction_id',
+            'trans_guest_id',
+            'trans_guest_id__guest_passport_number',
+            'trans_guest_id__guest_name',
+            'trans_guest_id__guest_date_of_birth',
+            'trans_guest_id__guest_comm_dweller',
+            'trans_guest_id__guest_type',
+            'trans_date_checkout_planned',
             'trans_checkin_hotel',
             'trans_remarks',
         )
@@ -187,6 +266,33 @@ def process_checkin(request):
   
   # If the request method is not POST, render the form template as usual
   return render(request, 'gms/reservations.html')
+
+@login_required
+def process_checkout(request):
+  if request.method == 'POST':
+    transaction_id = request.POST.get('transaction_id')
+    if transaction_id == '':
+      messages.error(request, 'Transaction ID not found')
+      return redirect('departures')  # Replace 'error-page' with the appropriate URL or view name
+    
+    # Retrieve the guest transaction record
+    try:
+      transaction = guest_transaction.objects.get(transaction_id=transaction_id)
+    except guest_transaction.DoesNotExist:
+      # Handle the case when the transaction does not exist
+      messages.error(request, 'Departure does not exist!')
+      return redirect('departures')  # Replace 'error-page' with the appropriate URL or view name
+    
+    # Update the trans_date_checkin field with the current timestamp
+    transaction.trans_date_checkout = datetime.now(pytz.utc)
+    transaction.save()
+    
+    # Redirect to a success page or do any other desired action
+    return redirect('departures')  # Replace 'success-page' with the appropriate URL or view name
+  
+  # If the request method is not POST, render the form template as usual
+  return render(request, 'gms/departures.html')
+
 
 @login_required
 def search_checkin(request):

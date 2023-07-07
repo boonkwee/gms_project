@@ -3,8 +3,10 @@ from django.contrib.auth import get_user_model
 from gqf.models import GQF
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
+from pprint import pprint
 
 gms_user = get_user_model()
+
 class UserTest(TestCase):
   def setUp(self):
     gqf = GQF.objects.create(code='VHAC-A', enabled=True)
@@ -28,6 +30,8 @@ class UserTest(TestCase):
     has_ohn = user.associated_facilities.filter(code='OHN').exists()
     has_vhac_a = user.associated_facilities.filter(code='VHAC-A').exists()
     donthave_moh = user.associated_facilities.filter(code='MOH').exists()
+    facilities_list = user.associated_facilities.values_list('code', flat=True)
+    pprint(facilities_list)
 
     self.assertTrue(has_ohn)
     self.assertTrue(has_vhac_a)

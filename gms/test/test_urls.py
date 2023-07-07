@@ -10,8 +10,12 @@ class TestUrls(SimpleTestCase):
     self.assertEquals(resolve(url).func.view_class, views.ReservationListView)
   
   def test_resolving_checkin_url(self):
-    url = reverse('check-in')
+    url = reverse('process-check-in')
     self.assertEquals(resolve(url).func, views.process_checkin)
+
+  def test_resolving_checkin_url(self):
+    url = reverse('process-check-out')
+    self.assertEquals(resolve(url).func, views.process_checkout)
 
   def test_resolving_upload_url(self):
     url = reverse('upload')

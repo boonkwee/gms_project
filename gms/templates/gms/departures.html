@@ -70,14 +70,14 @@
                     {% else %}
                       <td class="align-middle">{{ field_value }}</td>
                     {% endif %}
-                  {% elif field_name == 'trans_date_checkin' %}
+                  {% elif field_name == 'trans_date_checkout' %}
                     {% if field_value == '' %}
                       <td class="align-middle text-center">
-                        <form action="{% url 'process-check-in' %}" method="POST">
+                        <form action="{% url 'process-check-out' %}" method="POST">
                           {% csrf_token %}
                           <input type="hidden" name="transaction_id" value="{{ row_dict.transaction_id }}" />
                           <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-check mr-2"></i>Check-in
+                            <i class="fas fa-check mr-2"></i>Check-out
                           </button>
                         </form>
                       </td>
