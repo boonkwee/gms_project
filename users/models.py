@@ -3,9 +3,13 @@ from django.db import models
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
+from gqf.models import GQF
 
 # Create your models here.
 class SystemUser(AbstractUser):
+    associated_facilities = models.ManyToManyField(GQF, blank=True,
+                                                   verbose_name='Associated Facilities')
+
     # Add additional fields for password expiry
     password_expiry_date = models.DateField(
         default=timezone.now().date() + relativedelta(year=1),
