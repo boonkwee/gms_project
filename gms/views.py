@@ -136,11 +136,12 @@ class DeparturesListView(LoginRequiredMixin, ListView):
   def get_queryset(self):
     queryset = guest_transaction.objects \
         .filter(Q(trans_date_checkout__isnull=True) & Q(trans_date_checkin__isnull=False)) \
-        .select_related('trans_guest_id') \
+        .select_related('trans_guest_id', 'trans_room_id') \
         .order_by('trans_date_checkout') \
         .values(
             'trans_date_checkout',
             'trans_room_id__room_name',
+            'trans_room_id__room_status',
             'transaction_id',
             'trans_guest_id',
             'trans_guest_id__guest_passport_number',
@@ -148,6 +149,8 @@ class DeparturesListView(LoginRequiredMixin, ListView):
             'trans_guest_id__guest_date_of_birth',
             'trans_guest_id__guest_comm_dweller',
             'trans_guest_id__guest_type',
+            'trans_guest_id__guest_location',
+            'trans_date_checkin',
             'trans_date_checkout_planned',
             'trans_checkin_hotel',
             'trans_remarks',

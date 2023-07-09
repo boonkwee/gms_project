@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, date as date
+import re
 
 def running_test(test_func):
   def wrapper(*args, **kwargs):
@@ -36,3 +37,25 @@ def convert_excel_number_to_datetime(excel_number):
     # Handle any other exceptions that may occur during the conversion
     print("Error occurred while converting Excel number to date:", str(e))
     return None
+
+
+def NRIC_checksum(nric=None):
+    '''
+    https://userapps.support.sap.com/sap/support/knowledge/en/2572734
+    '''
+    if nric is None:
+        raise ValueError("Missing NRIC for verification")
+    elif not isinstance(nric, str):
+        raise ValueError(str(type(nric)) + " given, expected NRIC as string")
+    l_nric = str.lower(nric)
+    if re.match(string=l_nric, pattern="^[mstgf]{1}\\d{7}[abcdefghijklmnpqrtuwxz]{1}$") is None:
+        return False
+    prefix = l_nric[0]
+    
+    suffix = l_nric[-1]
+    offset = 4 if prefix in "tg" else 3 if prefix in "m" else 0
+    vector_m = [int(i) for i in "2765432"]
+    vector_o = [int(i) for i in l_nric[1:-1]]
+    displacement = (sum(map(lambda x: x[0]*x[1], zip(vector_m, vector_o))) + offset) % 11
+    # pprint(displacement)
+    return suffix == "xwutrqpnmlk"[displacement] if prefix in "gfm" else suffix == "jzihgfedcba"[displacement]

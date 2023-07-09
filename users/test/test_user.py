@@ -30,8 +30,8 @@ class UserTest(TestCase):
     has_ohn = user.associated_facilities.filter(code='OHN').exists()
     has_vhac_a = user.associated_facilities.filter(code='VHAC-A').exists()
     donthave_moh = user.associated_facilities.filter(code='MOH').exists()
-    facilities_list = user.associated_facilities.values_list('code', flat=True)
-    pprint(facilities_list)
+    # facilities_list = user.associated_facilities.values_list('code', flat=True)
+    # pprint(facilities_list)
 
     self.assertTrue(has_ohn)
     self.assertTrue(has_vhac_a)
