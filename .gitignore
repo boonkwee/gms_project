@@ -10,3 +10,4 @@ venv
 *.ipynb
 test/*.xlsx
 gms_project/.env
+.coverage

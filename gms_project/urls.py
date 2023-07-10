@@ -22,6 +22,7 @@ urlpatterns = [
   path('gms/', include('gms.urls')),
   path('gqf/', include('gqf.urls')),
   path('accounts/', include('accounts.urls')),
+  path('accounts/', include('django.contrib.auth.urls')),
   path('guests/', include('guests.urls')),
   path('backend/', admin.site.urls),
   path('', RedirectView.as_view(url='/accounts/login/')),

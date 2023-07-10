@@ -1,13 +1,19 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from django.core.exceptions import ValidationError
 from .models import SystemUser
+from .forms import CustomUserChangeForm
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
+
 # Register your models here.
-class SysUserAdmin(admin.ModelAdmin):
+# class SysUserAdmin(admin.ModelAdmin):
+class SysUserAdmin(UserAdmin):
+    form = CustomUserChangeForm
     # list_display = ('username', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active',
     #                 'password_expiry_date')
     # fields = ('username', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active',

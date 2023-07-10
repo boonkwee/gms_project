@@ -13,3 +13,4 @@ test/
 **/test
 test/*.xlsx
 gms_project/.env
+.coverage
