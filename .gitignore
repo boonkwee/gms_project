@@ -11,3 +11,4 @@ venv
 test/*.xlsx
 gms_project/.env
 .coverage
+**/migrations/
