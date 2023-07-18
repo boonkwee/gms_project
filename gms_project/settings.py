@@ -92,29 +92,29 @@ WSGI_APPLICATION = 'gms_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "gms",
-#         "USER": os.getenv('DATABASE_USER'),
-#         "PASSWORD": os.getenv('DATABASE_PASSWORD'),
-#         "HOST": os.getenv('DATABASE_HOST'),
-#         "PORT": "5432",
-#         "OPTIONS": {
-#             "sslmode": "require",
-#         }
-#     }
-# }
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "gms_uat",
-        "USER": os.getenv('VAULT_USER'),
-        "PASSWORD": os.getenv('VAULT_PASSWORD'),
-        "HOST": os.getenv('VAULT_HOST'),
+        "NAME": "gms",
+        "USER": os.getenv('DATABASE_USER'),
+        "PASSWORD": os.getenv('DATABASE_PASSWORD'),
+        "HOST": os.getenv('DATABASE_HOST'),
         "PORT": "5432",
+        "OPTIONS": {
+            "sslmode": "require",
+        }
     }
 }
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "gms_uat",
+#         "USER": os.getenv('VAULT_USER'),
+#         "PASSWORD": os.getenv('VAULT_PASSWORD'),
+#         "HOST": os.getenv('VAULT_HOST'),
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Password validation
